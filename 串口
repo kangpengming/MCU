@@ -1,0 +1,50 @@
+#include"reg51.h"
+sbit LED1=P1^0;
+sbit  LED=P1^1;
+unsigned  char  flag,i,a;
+unsigned  char code       table[]="i get";
+delay()
+{ int j,h;
+for(j=0;j<=500;j++)
+for(h=0;h<=500;h++);
+}
+void main()
+{TMOD=0x20;
+TH1=0xfd;
+TL1=0xfd;
+EA=1;
+TR1=1;
+SM0=0;
+SM1=1;
+ES=1;
+REN=1;
+while(1)
+{
+if(flag==1)
+         {
+          ES=0;
+          for(i=0;i<6;i++)
+          {
+           SBUF=table[i];
+           while(!TI);
+           TI=0;
+          }
+          SBUF=a;   //Êý¾Ý·¢ËÍ
+          while(!TI);
+           TI=0;
+          ES=1;
+          flag=0;
+                  delay();
+                  LED1=0;
+        }
+}
+
+}
+void ser() interrupt 4
+{
+ RI=0;
+ a=SBUF;       //·¢ËÍÊý¾Ý
+ flag=1;
+ delay();
+ LED=0;
+}
